@@ -2,8 +2,15 @@ version: "3.8"
 services:
   app:
     image: php:8.2-fpm
-    container_name: laravel_app
+    container_name: app
     working_dir: /var/www
+    command: >
+      sh -c "
+      apt-get update && apt-get install -y git unzip curl &&
+      curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&
+      docker-php-ext-install pdo pdo_mysql &&
+      php-fpm 
+      "
     volumes:
       - ./laravel1:/var/www
       - ./php.ini:/usr/local/etc/php/php.ini
@@ -11,9 +18,9 @@ services:
       - laravel
   webserver:
     image: nginx:latest
-    container_name: nginx_server
+    container_name: nginx_server_ecom
     ports:
-      - "8000:80"
+      - "8001:80"
     volumes:
       - ./laravel1:/var/www
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
@@ -21,9 +28,9 @@ services:
       - laravel
   db:
     image: mysql:8.0
-    container_name: mysql_db
+    container_name: mysql_db_server
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel
