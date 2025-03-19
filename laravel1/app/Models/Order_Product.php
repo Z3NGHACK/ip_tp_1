@@ -5,20 +5,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Order_Product extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-    protected $dates = ['deleted_at']; // Ensure deleted_at is treated as a date
-    protected $fillable = [
-        'product_id',
-        'order_id',
-        'price',
-        'quantity',
-    ];
-    // OrderProduct belongsTo Product
-    public function product() { return $this->belongsTo(Product::class); }
+    use HasFactory, SoftDeletes;
 
-    // OrderProduct belongsTo Order
+    protected $dates = ['deleted_at'];
+    protected $fillable = ['product_id', 'order_id', 'price', 'quantity'];
+
+    // Relationships
+    public function product() { return $this->belongsTo(Product::class); }
     public function order() { return $this->belongsTo(Orders::class); }
 }

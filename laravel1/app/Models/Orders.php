@@ -11,37 +11,23 @@ use Carbon\Carbon;
 
 class Orders extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+
     protected $table = 'order';
-    protected $dates = ['deleted_at']; // Ensure deleted_at is treated as a date
-    protected $fillable = [
-        'total_price',
-        'customer_id',
-        'order_date',
-    ];
-    // Order belongsTo Customer
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
-    }
+    protected $dates = ['deleted_at'];
+    protected $fillable = ['total_price', 'customer_id', 'order_date'];
 
-
-    // Order hasMany Payments
+    // Relationships
+    public function customer() { return $this->belongsTo(Customer::class); }
     public function payments() { return $this->hasMany(Payment::class); }
-
-    // Order hasMany OrderProducts
     public function orderProducts() { return $this->hasMany(Order_Product::class); }
 
-     // Accessor and Mutator for order_date
-     protected function orderDate(): Attribute
-     {
-         return Attribute::make(
-             // Mutator: Convert input format to MySQL format before saving
-             set: fn ($value) => Carbon::createFromFormat('d/m/Y H:i:s', $value)->format('Y-m-d H:i:s'),
-
-             // Accessor: Convert database format to user format when retrieving
-             get: fn ($value) => Carbon::parse($value)->format('d/m/Y H:i:s')
-         );
-     }
+    // Accessor and Mutator for order_date
+    protected function orderDate(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => Carbon::createFromFormat('d/m/Y H:i:s', $value)->format('Y-m-d H:i:s'),
+            get: fn ($value) => Carbon::parse($value)->format('d/m/Y H:i:s')
+        );
+    }
 }

@@ -10,35 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Customer extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+
     protected $table = 'customer';
-    protected $dates = ['deleted_at']; // Ensure deleted_at is treated as a date
+    protected $dates = ['deleted_at'];
+    protected $fillable = ['name', 'email', 'address', 'phone'];
 
-    // fields
-    protected $fillable = [
-        'name',
-        'email',
-        'address',
-        'phone',
-    ];
-
-    // Customer hasMany carts
-    public function carts() {return $this->hasMany(Cart::class);}
-
-    // Customer hasMany wishlists
-    public function wishlists() {return $this->hasMany(Wishlist::class);}
-
-    // Customer hasMany orders
-    public function orders()
-    {
-        return $this->hasMany(Orders::class);
-    }
-
-
-    // Customer hasMany payments
-    public function payments() {return $this->hasMany(Payment::class);}
-
-    // Customer hasMany products through carts
-    public function products(){return $this->hasManyThrough(Product::class, Cart::class, 'customer_id', 'id', 'id', 'product_id');}
+    // Relationships
+    public function carts() { return $this->hasMany(Cart::class); }
+    public function wishlists() { return $this->hasMany(Wishlist::class); }
+    public function orders() { return $this->hasMany(Orders::class); }
+    public function payments() { return $this->hasMany(Payment::class); }
+    public function products() { return $this->hasManyThrough(Product::class, Cart::class, 'customer_id', 'id', 'id', 'product_id'); }
 }
