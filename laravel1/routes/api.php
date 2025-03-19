@@ -13,7 +13,7 @@ Route::controller(CategoryController::class)->prefix('categories')->group(functi
     Route::get('/', 'getCategories');
     Route::post("/", 'createCategory');
     Route::get("/{categoryId}", 'getCategory');
-    Route::patch("/{categoryId}", 'updateCategory');
+    Route::put("/{categoryId}", 'updateCategory');
     Route::delete("/{categoryId}", 'deleteCategory');
 });
 
