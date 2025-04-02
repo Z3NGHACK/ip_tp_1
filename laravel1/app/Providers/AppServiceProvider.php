@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\Orders;
-use App\Observers\ModelActivityObserver;
+use App\Models\Order;  // Import the Order model
+use App\Observers\ModelActivityObserver; // Import the Observer
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Orders::observe(ModelActivityObserver::class);
+        Order::observe(ModelActivityObserver::class);
     }
 }

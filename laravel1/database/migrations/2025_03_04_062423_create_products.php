@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->bigInteger("category_id")->unsigned();
-            $table->double('pricing');
+            $table->string('name', 255)->nullable(false);
+            $table->double('price')->nullable(false);
             $table->text('description')->nullable();
-            $table->json("images")->nullable();
+            $table->text('images')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('category_id')->nullable(false);
+            $table->softDeletes();
 
-            $table->foreign('category_id')->references('id')->on('categories');
-        });
+            // Foreign key constraint
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+        });        
     }
 
     /**

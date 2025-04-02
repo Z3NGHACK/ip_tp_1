@@ -6,23 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('order', function (Blueprint $table) {
+        Schema::create('wishlist', function (Blueprint $table) {
             $table->id();
-            $table->decimal('total_price', 10, 2);
+            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('customer_id');
-            $table->timestamp('order_date');
             $table->timestamps();
             $table->softDeletes();
 
-            // Foreign key constraint
+            // Foreign key constraints
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('order');
+        Schema::dropIfExists('wishlist');
     }
 };
