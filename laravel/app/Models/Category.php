@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'categories'; 
+    protected $table = 'categories';
     protected $dates = ['deleted_at']; // Ensure deleted_at is treated as a date
 
     protected $fillable = ['name'];
