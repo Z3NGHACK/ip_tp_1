@@ -13,27 +13,32 @@ import { UserService } from './user.service';
 export class UsersController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('/:username')
-  getUser(@Param('username') username: string) {
-    return this.userService.getUser(username);
+  // Get user by ID
+  @Get('/:id')
+  getUser(@Param('id') id: string) {
+    return this.userService.findOne(+id); // convert id string to number
   }
 
-  @Post('/users')
+  // Create new user
+  @Post()
   createUser(
     @Body() body: { username: string; email: string; password: string },
   ) {
-    return this.userService.createUser(body);
+    return this.userService.create(body);
   }
 
-  @Patch('/users/:username')
+  // Update user by ID
+  @Patch('/:id')
   updateUser(
-    @Body() body: { username: string; email: string; password: string },
+    @Param('id') id: string,
+    @Body() body: { username?: string; email?: string; password?: string },
   ) {
-    return this.userService.updateUser(body);
+    return this.userService.update(+id, body);
   }
 
-  @Delete('/users/:username')
-  deleteUser(@Param('username') username: string) {
-    return this.userService.deleteUser(username);
+  // Delete user by ID
+  @Delete('/:id')
+  deleteUser(@Param('id') id: string) {
+    return this.userService.remove(+id);
   }
 }
