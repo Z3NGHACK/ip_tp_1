@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,22 +10,48 @@ export class UserService {
     private usersRepo: Repository<User>,
   ) {}
 
-  create(userData: Partial<User>) {
-    const user = this.usersRepo.create(userData);
-    return this.usersRepo.save(user);
+  async create(userData: Partial<User>) {
+    try{
+      const check = await this.usersRepo.findOne({where:{id: userData.id}})
+      if(check)
+        throw new NotFoundException(`User with id ${userData.id} already use`);
+
+      const user = this.usersRepo.create(userData);
+      return this.usersRepo.save(user);
+    
+    }catch(err){
+      throw new BadRequestException(err.message)
+    }
   }
 
   findAll() {
-    return this.usersRepo.find({ relations: ['tasks'] });
+    try{
+      return this.usersRepo.find({ relations: ['tasks'] });
+    
+    }catch(err){
+      throw new BadRequestException(err.message)
+    }
   }
 
   findOne(id: number) {
-    return this.usersRepo.findOne({ where: { id }, relations: ['tasks'] });
+    try{
+      const user = this.usersRepo.findOne({where:{id: id}})
+      if(!user)
+        throw new NotFoundException(`User with id ${id} not found`);
+      return this.usersRepo.findOne({ where: { id }, relations: ['tasks'] });
+    
+    }catch(err){
+      throw new BadRequestException(err.message)
+    }
   }
 
   async update(id: number, updateData: Partial<User>) {
-    await this.usersRepo.update(id, updateData);
-    return this.findOne(id);
+    try{
+      await this.usersRepo.update(id, updateData);
+      return this.findOne(id);
+    }catch(err){
+      throw new BadRequestException(err.message)
+    }
   }
 
   remove(id: number) {

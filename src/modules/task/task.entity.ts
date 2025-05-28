@@ -19,6 +19,6 @@ export class Task {
   completedAt: Date | null;
 
 
-  @ManyToOne(() => User, user => user.tasks, { onDelete: 'CASCADE' })
-  user: User;
+  @ManyToOne(() => User, userId => userId.tasks, { onDelete: 'CASCADE' })
+  userId: User;
 }
